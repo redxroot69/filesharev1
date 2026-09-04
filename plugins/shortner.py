@@ -1,14 +1,16 @@
 import requests
 import random
 import string
+from collections import OrderedDict
 from config import SHORT_URL, SHORT_API, MESSAGES
 from pyrogram import Client, filters
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, InputMediaPhoto
 from pyrogram.errors.pyromod import ListenerTimeout
 from helper.helper_func import force_sub
 
-# ✅ In-memory cache
-shortened_urls_cache = {}
+# ✅ In-memory cache (bounded to prevent unbounded growth)
+MAX_SHORTENED_CACHE_SIZE = 1000
+shortened_urls_cache = OrderedDict()
 
 def generate_random_alphanumeric():
     characters = string.ascii_letters + string.digits
@@ -23,6 +25,7 @@ def get_short(url, client):
 
     # Step 2: Check cache
     if url in shortened_urls_cache:
+        shortened_urls_cache.move_to_end(url)
         return shortened_urls_cache[url]
 
     try:
@@ -38,6 +41,10 @@ def get_short(url, client):
         if rjson.get("status") == "success" and response.status_code == 200:
             short_url = rjson.get("shortenedUrl", url)
             shortened_urls_cache[url] = short_url
+            shortened_urls_cache.move_to_end(url)
+            # Evict the oldest entry if the cache exceeds its size limit
+            if len(shortened_urls_cache) > MAX_SHORTENED_CACHE_SIZE:
+                shortened_urls_cache.popitem(last=False)
             return short_url
     except Exception as e:
         print(f"[Shortener Error] {e}")

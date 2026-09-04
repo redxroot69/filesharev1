@@ -116,7 +116,7 @@ async def back_to_db_management(client, query):
     
     await query.answer()
     
-    # Redirect to main dbchannels display
+    # Redirect to main DB channels management display
     db_channels = getattr(client, 'db_channels', {})
     primary_db = getattr(client, 'primary_db_channel', client.db)
     
@@ -214,7 +214,7 @@ async def quick_add_db(client: Client, message: Message):
 ›› **ɪᴅ:** `{channel_id}`
 ›› **sᴛᴀᴛᴜs:** {'ᴘʀɪᴍᴀʀʏ' if channel_data['is_primary'] else 'sᴇᴄᴏɴᴅᴀʀʏ'}
 
-ᴜsᴇ `/dbchannels` ᴛᴏ ᴍᴀɴᴀɢᴇ ᴀʟʟ ʏᴏᴜʀ ᴅʙ ᴄʜᴀɴɴᴇʟs.""")
+ᴜsᴇ `/db` ᴛᴏ ᴍᴀɴᴀɢᴇ ᴀʟʟ ʏᴏᴜʀ ᴅʙ ᴄʜᴀɴɴᴇʟs.""")
     
     except Exception as e:
         await message.reply(f"""**✗ ᴇʀʀᴏʀ ᴀᴄᴄᴇssɪɴɢ ᴄʜᴀɴɴᴇʟ!**
@@ -266,7 +266,7 @@ async def quick_remove_db(client: Client, message: Message):
     
     # Check if trying to remove primary channel
     if db_channels[str(channel_id)].get('is_primary', False) and len(db_channels) > 1:
-        return await message.reply("**✗ ᴄᴀɴɴᴏᴛ ʀᴇᴍᴏᴠᴇ ᴘʀɪᴍᴀʀʏ ᴄʜᴀɴɴᴇʟ!**\n\n__ᴘʟᴇᴀsᴇ sᴇᴛ ᴀɴᴏᴛʜᴇʀ ᴄʜᴀɴɴᴇʟ ᴀs ᴘʀɪᴍᴀʀʏ ғɪʀsᴛ ᴜsɪɴɢ `/dbchannels`.__")
+        return await message.reply("**✗ ᴄᴀɴɴᴏᴛ ʀᴇᴍᴏᴠᴇ ᴘʀɪᴍᴀʀʏ ᴄʜᴀɴɴᴇʟ!**\n\n__ᴘʟᴇᴀsᴇ sᴇᴛ ᴀɴᴏᴛʜᴇʀ ᴄʜᴀɴɴᴇʟ ᴀs ᴘʀɪᴍᴀʀʏ ғɪʀsᴛ ᴜsɪɴɢ `/db`.__")
     
     # Remove from database and client
     channel_name = db_channels[str(channel_id)].get('name', 'ᴜɴᴋɴᴏᴡɴ')

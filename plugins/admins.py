@@ -5,22 +5,7 @@ import time
 import psutil
 import shutil
 
-#===============================================================#
-
-async def admins(client, query):
-    if not (query.from_user.id==client.owner):
-        return await query.answer('This can only be used by owner.')
-    msg = f"""<blockquote>**Admin Settings:**</blockquote>
-**Admin User IDs:** {", ".join(f"`{a}`" for a in client.admins)}
-
-__Use the appropriate button below to add or remove an admin based on your needs!__
-"""
-    reply_markup = InlineKeyboardMarkup([
-        [InlineKeyboardButton('ᴀᴅᴅ ᴀᴅᴍɪɴ', 'add_admin'), InlineKeyboardButton('ʀᴇᴍᴏᴠᴇ ᴀᴅᴍɪɴ', 'rm_admin')],
-        [InlineKeyboardButton('◂ ʙᴀᴄᴋ', 'settings')]]
-    )
-    await query.message.edit_text(msg, reply_markup=reply_markup)
-    return
+from plugins.settings import admins
 
 #===============================================================#
 

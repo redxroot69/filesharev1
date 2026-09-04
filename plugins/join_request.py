@@ -1,8 +1,18 @@
 from pyrogram import Client, filters
 from pyrogram.types import ChatJoinRequest, ChatMemberUpdated
-from pyrogram.enums import ChatMemberStatus
+from pyrogram.enums import ChatMemberStatus, ChatType
 
-@Client.on_chat_join_request(filters.channel)
+# Custom filter matching any group-like chat (channels, supergroups and groups)
+# so request force-sub also works when the force-sub target is a group.
+async def _is_group_like_chat(_, __, update):
+    return bool(
+        update.chat
+        and update.chat.type in (ChatType.CHANNEL, ChatType.SUPERGROUP, ChatType.GROUP)
+    )
+
+fsub_chat = filters.create(_is_group_like_chat, "FsubChat")
+
+@Client.on_chat_join_request(fsub_chat)
 async def handle_join_request(client, join_request: ChatJoinRequest):
     """Handle join request for fsub channels"""
     user_id = join_request.from_user.id
@@ -29,7 +39,7 @@ async def handle_join_request(client, join_request: ChatJoinRequest):
     except Exception as e:
         client.LOGGER(__name__, client.name).error(f"Join request error: {user_id} in {channel_id}: {e}")
 
-@Client.on_chat_member_updated(filters.channel)
+@Client.on_chat_member_updated(fsub_chat)
 async def handle_member_update(client, chat_member_updated: ChatMemberUpdated):
     """Handle member status updates for fsub channels"""
     user_id = chat_member_updated.from_user.id

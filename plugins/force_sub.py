@@ -1,35 +1,7 @@
 from pyrogram import Client, filters
 from pyrogram.types import CallbackQuery, Message, InlineKeyboardButton, InlineKeyboardMarkup
 from helper.helper_func import is_bot_admin
-
-#===============================================================#
-
-async def fsub(client, query):
-    # Create a formatted list of channels with names and IDs
-    if client.fsub_dict:
-        channel_list = []
-        for channel_id, channel_data in client.fsub_dict.items():
-            channel_name = channel_data[0] if channel_data and len(channel_data) > 0 else "Unknown"
-            request_status = "Request: ✅" if channel_data[2] else "Request: ❌"
-            timer_status = f"Timer: {channel_data[3]}m" if channel_data[3] > 0 else "Timer: ∞"
-            channel_list.append(f"• `{channel_name}` (`{channel_id}`) - {request_status}, {timer_status}")
-        
-        channels_display = "\n".join(channel_list)
-    else:
-        channels_display = "_No force subscription channels configured_"
-    
-    msg = f"""<blockquote>**Force Subscription Settings:**</blockquote>
-**Configured Channels:**
-{channels_display}
-
-__Use the appropriate button below to add or remove a force subscription channel based on your needs!__
-"""
-    reply_markup = InlineKeyboardMarkup([
-        [InlineKeyboardButton('ᴀᴅᴅ ᴄʜᴀɴɴᴇʟ', 'add_fsub'), InlineKeyboardButton('ʀᴇᴍᴏᴠᴇ ᴄʜᴀɴɴᴇʟ', 'rm_fsub')],
-        [InlineKeyboardButton('◂ ʙᴀᴄᴋ', 'settings')]]
-    )
-    await query.message.edit_text(msg, reply_markup=reply_markup)
-    return
+from plugins.settings import fsub
 
 #===============================================================#
 

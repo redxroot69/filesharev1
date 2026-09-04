@@ -1,26 +1,6 @@
 from pyrogram import Client, filters
 from pyrogram.types import CallbackQuery, Message, InlineKeyboardButton, InlineKeyboardMarkup
-
-#===============================================================#
-
-async def texts(client, query):
-    msg = f"""<blockquote>**Text Configuration:**</blockquote>
-**Start Message:**
-<pre>{client.messages.get('START', 'Empty')}</pre>
-**Force Sub Message:**
-<pre>{client.messages.get('FSUB', 'Empty')}</pre>
-**About Message:**
-<pre>{client.messages.get('ABOUT', 'Empty')}</pre>
-**Reply Message:**
-<pre>{client.reply_text}</pre>
-    """
-    reply_markup = InlineKeyboardMarkup([
-        [InlineKeyboardButton(f'ꜱᴛᴀʀᴛ ᴛᴇxᴛ', 'start_txt'), InlineKeyboardButton(f'ꜰꜱᴜʙ ᴛᴇxᴛ', 'fsub_txt')],
-        [InlineKeyboardButton('ʀᴇᴘʟʏ ᴛᴇxᴛ', 'reply_txt'), InlineKeyboardButton('ᴀʙᴏᴜᴛ ᴛᴇxᴛ', 'about_txt')],
-        [InlineKeyboardButton('◂ ʙᴀᴄᴋ', 'settings')]]
-    )
-    await query.message.edit_text(msg, reply_markup=reply_markup)
-    return
+from plugins.settings import texts
 
 #===============================================================#
 
@@ -36,7 +16,7 @@ async def start_txt(client: Client, query: CallbackQuery):
         await texts(client, query)
         return await ask_text.reply("__Start text has been changed!__")
     except Exception as e:
-        return client.logger(__name__, client.name).error(e)
+        return client.LOGGER(__name__, client.name).error(e)
 
 #===============================================================#
 
@@ -52,7 +32,7 @@ async def force_txt(client: Client, query: CallbackQuery):
         await texts(client, query)
         return await ask_text.reply("__Force Sub text has been changed!__")
     except Exception as e:
-        return client.logger(__name__, client.name).error(e)
+        return client.LOGGER(__name__, client.name).error(e)
 
 #===============================================================#
 
@@ -68,7 +48,7 @@ async def about_txt(client: Client, query: CallbackQuery):
         await texts(client, query)
         return await ask_text.reply("__About text has been changed!__")
     except Exception as e:
-        return client.logger(__name__, client.name).error(e)
+        return client.LOGGER(__name__, client.name).error(e)
 
 #===============================================================#
 
@@ -84,4 +64,4 @@ async def reply_txt(client: Client, query: CallbackQuery):
         await texts(client, query)
         return await ask_text.reply("__Reply text has been changed!__")
     except Exception as e:
-        return client.logger(__name__, client.name).error(e)
+        return client.LOGGER(__name__, client.name).error(e)

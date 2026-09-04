@@ -32,14 +32,15 @@ async def get_messages(client, message_ids):
     total_messages = 0
     while total_messages != len(message_ids):
         temb_ids = message_ids[total_messages:total_messages+200]
+        msgs = []
         try:
             # Use new multi-DB channel function
             msgs = await get_messages_from_db_channels(client, temb_ids)
         except FloodWait as e:
             await asyncio.sleep(e.x)
             msgs = await get_messages_from_db_channels(client, temb_ids)
-        except:
-            pass
+        except Exception as e:
+            client.LOGGER(__name__, client.name).warning(f"Error fetching messages: {e}")
         total_messages += len(temb_ids)
         messages.extend(msgs)
     return messages
